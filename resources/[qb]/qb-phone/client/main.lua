@@ -473,6 +473,10 @@ RegisterKeyMapping('phone', 'Open Phone', 'keyboard', Config.OpenPhone)
 
 -- NUI Callbacks
 
+RegisterNUICallback("HireHitman", function() 
+    TriggerEvent("krane-hitman-call")
+end)
+
 RegisterNUICallback('CancelOutgoingCall', function(_, cb)
     CancelCall()
     cb('ok')
