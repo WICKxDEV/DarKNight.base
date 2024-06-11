@@ -167,6 +167,16 @@ Config.PhoneApplications = {
         slot = 15,
         Alerts = 0,
     },
+    ["Gang-Attack"] = {
+        app = "Gang-Attack",
+        color = "#004682",
+        icon = "fas fa-ad",
+        tooltipText = "Call a gang attack on your enemy",
+        job = false,
+        blockedjobs = {},
+        slot = 17,
+        Alerts = 0,
+    },
 }
 Config.MaxSlots = 20
 
