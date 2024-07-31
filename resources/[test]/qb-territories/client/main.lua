@@ -1,4 +1,3 @@
--- Define necessary variables and initialize QBCore object
 local Territories = {}
 local insidePoint = false
 local activeZone = nil
@@ -9,7 +8,6 @@ isLoggedIn = false
 PlayerGang = {}
 PlayerJob = {}
 
--- Event handlers for player loading, unloading, gang update, and job update
 RegisterNetEvent('QBCore:Client:OnPlayerLoaded')
 AddEventHandler('QBCore:Client:OnPlayerLoaded', function()
     isLoggedIn = true
@@ -34,7 +32,6 @@ AddEventHandler('QBCore:Client:OnJobUpdate', function(JobInfo)
     isLoggedIn = true
 end)
 
--- Thread to create territory zones and blips on the map
 CreateThread(function()
     Wait(500)
     for k, v in pairs(Zones["Territories"]) do
@@ -61,12 +58,12 @@ CreateThread(function()
             zone = zone,
             id = k,
             blip = blip,
-            blip2 = blip2
+            blip2 = blip2,
+            baseRadius = v.radius
         }
     end
 end)
 
--- Event handler to update territory blips
 RegisterNetEvent("qb-gangs:client:updateblips")
 AddEventHandler("qb-gangs:client:updateblips", function(zone, winner)
     local colour = Zones["Colours"][winner]
@@ -75,11 +72,10 @@ AddEventHandler("qb-gangs:client:updateblips", function(zone, winner)
     SetBlipColour(blip, colour)
     SetBlipColour(blip2, colour)
     BeginTextCommandSetBlipName("STRING")
-    AddTextComponentSubstringPlayerName(winner)
+    AddTextComponentSubstringPlayerName(Zones["Gangs"][winner].name)
     EndTextCommandSetBlipName(blip2)
 end)
 
--- Function to check if a territory is contested
 function isContested(tab)
     local count = 0
     for _, _ in pairs(tab) do
@@ -89,13 +85,11 @@ function isContested(tab)
     return count > 1 and "contested" or ""
 end
 
--- Function to update blip radius based on the number of players in a gang
 function updateBlipRadius(zone, playerCount)
-    local newRadius = Zones["Territories"][zone].baseRadius + (playerCount * 10) -- Adjust multiplier as needed
-    SetBlipScale(Territories[zone].blip, newRadius)
+    local newRadius = Territories[zone].baseRadius + (playerCount * 10) -- Adjust multiplier as needed
+    SetBlipScale(Territories[zone].blip, newRadius / Territories[zone].baseRadius)
 end
 
--- Main thread to handle player interaction with territories
 CreateThread(function()
     while true do 
         Wait(500)
@@ -103,14 +97,12 @@ CreateThread(function()
             local PlayerPed = PlayerPedId()
             local pedCoords = GetEntityCoords(PlayerPed)
             
-            -- Check for contested territories
             for _, v in pairs(Zones["Territories"]) do
                 while isContested(v.occupants) == "contested" do
                     -- Handle contested territory logic here
                 end
             end 
 
-            -- Handle player entering and leaving territories
             for k, zone in pairs(Territories) do  
                 if Territories[k].zone:isPointInside(pedCoords) then
                     insidePoint = true
@@ -141,8 +133,37 @@ CreateThread(function()
     end
 end)
 
--- Event to update the blip radius based on the number of players in the gang
 RegisterNetEvent("qb-gangs:client:updateBlipRadius")
 AddEventHandler("qb-gangs:client:updateBlipRadius", function(zone, playerCount)
     updateBlipRadius(zone, playerCount)
+end)
+
+RegisterNetEvent("qb-gangs:client:receiveTerritories")
+AddEventHandler("qb-gangs:client:receiveTerritories", function(territories)
+    for k, v in pairs(territories) do
+        if Territories[k] then
+            Territories[k].zone = CircleZone:Create(v.centre, v.radius, {
+                name = "greenzone-" .. k,
+                debugPoly = Zones["Config"].debug
+            })
+
+            local blip = AddBlipForRadius(v.centre.x, v.centre.y, v.centre.z, v.radius)
+            SetBlipAlpha(blip, 80)
+            SetBlipColour(blip, Zones["Gangs"][v.winner].color or Zones["Gangs"]["neutral"].color)
+
+            local blip2 = AddBlipForCoord(v.centre.x, v.centre.y, v.centre.z)
+            SetBlipSprite(blip2, v.blip)
+            SetBlipDisplay(blip2, 4)
+            SetBlipScale(blip2, 0.8)
+            SetBlipAsShortRange(blip2, true)
+            SetBlipColour(blip2, Zones["Gangs"][v.winner].color or Zones["Gangs"]["neutral"].color)
+            BeginTextCommandSetBlipName("STRING")
+            AddTextComponentSubstringPlayerName(Zones["Gangs"][v.winner].name)
+            EndTextCommandSetBlipName(blip2)
+
+            Territories[k].blip = blip
+            Territories[k].blip2 = blip2
+            Territories[k].baseRadius = v.radius
+        end
+    end
 end)

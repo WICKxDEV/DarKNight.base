@@ -27,6 +27,11 @@ function isContested(tab)
     return count > 1 and "contested" or ""
 end
 
+function sendTerritoryData(src)
+    local territories = Zones["Territories"]
+    TriggerClientEvent("qb-gangs:client:receiveTerritories", src, territories)
+end
+
 RegisterNetEvent("qb-gangs:server:updateterritories")
 AddEventHandler("qb-gangs:server:updateterritories", function(zone, inside)
     local src = source
@@ -74,4 +79,8 @@ AddEventHandler("qb-gangs:server:updateterritories", function(zone, inside)
             end
         end
     end
+end)
+
+AddEventHandler('QBCore:Server:OnPlayerLoaded', function(playerId)
+    sendTerritoryData(playerId)
 end)
