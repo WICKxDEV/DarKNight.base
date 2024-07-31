@@ -43,12 +43,10 @@ CreateThread(function()
             debugPoly = Zones["Config"].debug,
         })
 
-        -- Create blip for the territory radius
         local blip = AddBlipForRadius(v.centre.x, v.centre.y, v.centre.z, v.radius)
-        SetBlipAlpha(blip, 80) -- Change opacity here
+        SetBlipAlpha(blip, 80)
         SetBlipColour(blip, Zones["Gangs"][v.winner].color or Zones["Gangs"]["neutral"].color)
 
-        -- Create blip for the territory center
         local blip2 = AddBlipForCoord(v.centre.x, v.centre.y, v.centre.z)
         SetBlipSprite(blip2, v.blip)
         SetBlipDisplay(blip2, 4)
@@ -62,7 +60,8 @@ CreateThread(function()
         Territories[k] = {
             zone = zone,
             id = k,
-            blip = blip
+            blip = blip,
+            blip2 = blip2
         }
     end
 end)
@@ -72,10 +71,12 @@ RegisterNetEvent("qb-gangs:client:updateblips")
 AddEventHandler("qb-gangs:client:updateblips", function(zone, winner)
     local colour = Zones["Colours"][winner]
     local blip = Territories[zone].blip
+    local blip2 = Territories[zone].blip2
     SetBlipColour(blip, colour)
+    SetBlipColour(blip2, colour)
     BeginTextCommandSetBlipName("STRING")
     AddTextComponentSubstringPlayerName(winner)
-    EndTextCommandSetBlipName(blip)
+    EndTextCommandSetBlipName(blip2)
 end)
 
 -- Function to check if a territory is contested
@@ -86,6 +87,12 @@ function isContested(tab)
     end
 
     return count > 1 and "contested" or ""
+end
+
+-- Function to update blip radius based on the number of players in a gang
+function updateBlipRadius(zone, playerCount)
+    local newRadius = Zones["Territories"][zone].baseRadius + (playerCount * 10) -- Adjust multiplier as needed
+    SetBlipScale(Territories[zone].blip, newRadius)
 end
 
 -- Main thread to handle player interaction with territories
@@ -132,4 +139,10 @@ CreateThread(function()
             Wait(2000)
         end
     end
+end)
+
+-- Event to update the blip radius based on the number of players in the gang
+RegisterNetEvent("qb-gangs:client:updateBlipRadius")
+AddEventHandler("qb-gangs:client:updateBlipRadius", function(zone, playerCount)
+    updateBlipRadius(zone, playerCount)
 end)
