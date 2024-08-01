@@ -1,8 +1,8 @@
 Laststand = Laststand or {}
 InLaststand = false
 LaststandTime = 0
-lastStandDict = 'combat@damage@writhe'
-lastStandAnim = 'writhe_loop'
+lastStandDict = 'combat@damage@writheidle_a'
+lastStandAnim = 'writhe_idle_b'
 isEscorted = false
 local isEscorting = false
 

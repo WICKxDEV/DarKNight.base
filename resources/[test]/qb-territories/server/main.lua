@@ -39,6 +39,7 @@ AddEventHandler("qb-gangs:server:updateterritories", function(zone, inside)
     local Territory = Zones["Territories"][zone]
 
     if Territory ~= nil then
+        -- If they're not in a gang or they're not a cop just ignore them
         if Gang.name ~= "none" then
             if inside then
                 if not checkGroup(Territory.occupants, Gang.label) then
@@ -61,20 +62,17 @@ AddEventHandler("qb-gangs:server:updateterritories", function(zone, inside)
                             if isContested(Territory.occupants) == "" then
                                 Territory.occupants[Gang.label].score = Territory.occupants[Gang.label].score + 1
                                 TriggerClientEvent('QBCore:Notify',source,"Taking Zone Progress "..Territory.occupants[Gang.label].score.."/"..Zones["Config"].minScore, "success")
+
                             end
                         else
                             Territory.winner = Gang.label
-                            Territory.occupants = {
-                                [Gang.label] = {
-                                    label = Gang.label,
-                                    score = 60,
-                                },
-                            }
-                            Territory.cooldown = GetGameTimer() + 60000 -- 1 minute cooldown
-                            TriggerClientEvent("qb-gangs:client:updateblips", -1, zone, Gang.label)
-                            TriggerClientEvent('QBCore:Notify', -1, "The "..Gang.label.." have taken over zone "..zone, "success")
+                            TriggerClientEvent("qb-gangs:client:updateblips",source, zone, Gang.label)
+                            Wait(1000)
                         end
+                    else
+                            --TriggerClientEvent('QBCore:Notify',src,Lang:t("error.member_not_connected"),"error")
                     end
+                   
                 end
             else
                 removeGroup(Territory.occupants, Gang.label)
@@ -82,6 +80,5 @@ AddEventHandler("qb-gangs:server:updateterritories", function(zone, inside)
         end
     end
 end)
-
 
 
