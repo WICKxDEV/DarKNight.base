@@ -1,6 +1,7 @@
 local Territories = {}
 local insidePoint = false
 local activeZone = nil
+local notificationTimeout = false
 
 local QBCore = exports['qb-core']:GetCoreObject()
 
@@ -31,6 +32,20 @@ AddEventHandler('QBCore:Client:OnGangUpdate', function(JobInfo)
     PlayerJob = JobInfo
     isLoggedIn = true
 end)
+
+
+RegisterNetEvent('qb-gangs:client:notifyTakeover')
+AddEventHandler('qb-gangs:client:notifyTakeover', function(gangName, zoneNumber, zoneName)
+    if not notificationTimeout then
+        TriggerEvent('QBCore:Notify', "The "..gangName.." have taken over zone ", "success")
+        notificationTimeout = true
+        SetTimeout(60000, function()
+            notificationTimeout = false
+        end)
+    end
+end)
+
+
 
 CreateThread(function()
     Wait(500)

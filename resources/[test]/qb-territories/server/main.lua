@@ -60,7 +60,7 @@ AddEventHandler("qb-gangs:server:updateterritories", function(zone, inside)
                         if score < Zones["Config"].minScore and Territory.winner ~= Gang.label then
                             if isContested(Territory.occupants) == "" then
                                 Territory.occupants[Gang.label].score = Territory.occupants[Gang.label].score + 1
-                                TriggerClientEvent('QBCore:Notify',source,"Taking Zone Progress "..Territory.occupants[Gang.label].score.."/"..Zones["Config"].minScore, "success")
+                                TriggerClientEvent('QBCore:Notify', source, "Taking Zone Progress "..Territory.occupants[Gang.label].score.."/"..Zones["Config"].minScore, "success")
                             end
                         else
                             Territory.winner = Gang.label
@@ -72,7 +72,7 @@ AddEventHandler("qb-gangs:server:updateterritories", function(zone, inside)
                             }
                             Territory.cooldown = GetGameTimer() + 60000 -- 1 minute cooldown
                             TriggerClientEvent("qb-gangs:client:updateblips", -1, zone, Gang.label)
-                            TriggerClientEvent('QBCore:Notify', -1, "The "..Gang.label.." have taken over zone "..zone, "success")
+                            TriggerClientEvent('qb-gangs:client:notifyTakeover', -1, Gang.label, zone, Territory.winner) -- Notify all players with zone name
                         end
                     end
                 end
@@ -82,6 +82,8 @@ AddEventHandler("qb-gangs:server:updateterritories", function(zone, inside)
         end
     end
 end)
+
+
 
 
 
