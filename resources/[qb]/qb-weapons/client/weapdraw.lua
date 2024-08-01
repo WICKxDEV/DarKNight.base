@@ -298,7 +298,7 @@ RegisterNetEvent('qb-weapons:client:DrawWeapon', function()
                         else
                             canFire = false
                             CeaseFire()
-                            TaskPlayAnimAdvanced(ped, 'reaction@intimidation@1h', 'outro', pos.x, pos.y, pos.z, 0, 0, rot, 8.0, 3.0, -1, 50, 0, 0, 0)
+                            TaskPlayAnimAdvanced(ped, 'reaction@intimidation@1h', 'step_fwd', pos.x, pos.y, pos.z, 0, 0, rot, 8.0, 3.0, -1, 50, 0, 0, 0)
                             Wait(1400)
                             SetCurrentPedWeapon(ped, `WEAPON_UNARMED`, true)
                             ClearPedTasks(ped)

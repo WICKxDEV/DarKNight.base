@@ -33,16 +33,16 @@ local recoils = {
     [`weapon_tecpistol`] = 0.3,
 
     -- Shotguns
-    [`weapon_pumpshotgun`] = 0.4,
-    [`weapon_sawnoffshotgun`] = 0.7,
-    [`weapon_assaultshotgun`] = 0.4,
-    [`weapon_bullpupshotgun`] = 0.2,
-    [`weapon_musket`] = 0.7,
-    [`weapon_heavyshotgun`] = 0.2,
-    [`weapon_dbshotgun`] = 0.7,
-    [`weapon_autoshotgun`] = 0.2,
-    [`weapon_pumpshotgun_mk2`] = 0.4,
-    [`weapon_combatshotgun`] = 0.0,
+    [`weapon_pumpshotgun`] = 0.9,
+    [`weapon_sawnoffshotgun`] = 0.9,
+    [`weapon_assaultshotgun`] = 0.9,
+    [`weapon_bullpupshotgun`] = 0.4,
+    [`weapon_musket`] = 0.9,
+    [`weapon_heavyshotgun`] = 0.4,
+    [`weapon_dbshotgun`] = 0.9,
+    [`weapon_autoshotgun`] = 0.4,
+    [`weapon_pumpshotgun_mk2`] = 0.9,
+    [`weapon_combatshotgun`] = 0.5,
 
     -- Assault Rifles
     [`weapon_assaultrifle`] = 0.5,

@@ -59,7 +59,7 @@ QBCore.Commands.Add(Config.Commands.CreateRace, 'Start A Street Race', { { name 
         return TriggerClientEvent('QBCore:Notify', src, 'The minimum stake is ' .. Config.Currency .. Config.MinimumStake, 'error')
     end
     if amount > Config.MaximumStake then
-        return TriggerClientEvent('QBCore:Notify', src, 'The maximum stake is ' .. Config.Currency .. Config.MaximumStake, 'error')
+        return TriggerClientEvent('QBCore:Notify', src, 'Under WICKxDEV Watch The maximum stake is ' .. Config.Currency .. Config.MaximumStake, 'error')
     end
 
 

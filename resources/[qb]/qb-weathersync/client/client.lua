@@ -61,11 +61,11 @@ CreateThread(function()
                 SetForcePedFootstepsTracks(false)
             end
             if lastWeather == 'RAIN' then
-                SetRainLevel(0.3)
+                SetRainLevel(0.4)
             elseif lastWeather == 'THUNDER' then
-                SetRainLevel(0.5)
+                SetRainLevel(0.6)
             else
-                SetRainLevel(0.0)
+                SetRainLevel(0.1)
             end
         else
             Wait(1000)
