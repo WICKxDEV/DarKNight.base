@@ -1,7 +1,6 @@
 local Territories = {}
 local insidePoint = false
 local activeZone = nil
-local notificationTimeout = false
 
 local QBCore = exports['qb-core']:GetCoreObject()
 
@@ -33,20 +32,6 @@ AddEventHandler('QBCore:Client:OnGangUpdate', function(JobInfo)
     isLoggedIn = true
 end)
 
-
-RegisterNetEvent('qb-gangs:client:notifyTakeover')
-AddEventHandler('qb-gangs:client:notifyTakeover', function(gangName, zoneNumber, zoneName)
-    if not notificationTimeout then
-        TriggerEvent('QBCore:Notify', "The "..gangName.." have taken over zone ", "success")
-        notificationTimeout = true
-        SetTimeout(60000, function()
-            notificationTimeout = false
-        end)
-    end
-end)
-
-
-
 CreateThread(function()
     Wait(500)
     for k, v in pairs(Zones["Territories"]) do
@@ -55,10 +40,9 @@ CreateThread(function()
             debugPoly = Zones["Config"].debug,
         })
 
-        local blipRadius = AddBlipForRadius(v.centre.x, v.centre.y, v.centre.z, v.radius)
-        SetBlipAlpha(blipRadius, 80) -- Change opacity here
-        SetBlipColour(blipRadius, Zones["Gangs"][v.winner].color ~= nil and Zones["Gangs"][v.winner].color or Zones["Gangs"]["neutral"].color)
-
+        local blip = AddBlipForRadius(v.centre.x, v.centre.y, v.centre.z, v.radius)
+        SetBlipAlpha(blip, 80) -- Change opacity here
+        SetBlipColour(blip, Zones["Gangs"][v.winner].color ~= nil and Zones["Gangs"][v.winner].color or Zones["Gangs"]["neutral"].color)
 
 
         local blip2 = AddBlipForCoord(v.centre.x, v.centre.y, v.centre.z)
@@ -74,38 +58,33 @@ CreateThread(function()
         Territories[k] = {
             zone = zone,
             id = k,
-            blip = blip,
-            blipRadius = blipRadius
-        }        
+            blip = blip
+        }
     end
 end)
 
 RegisterNetEvent("qb-gangs:client:updateblips")
 AddEventHandler("qb-gangs:client:updateblips", function(zone, winner)
-    local colour = Zones["Gangs"][winner].color
+    local colour = Zones["Colours"][winner]
+   -- local blip = AddBlipForRadius(Zones["Territories"][zone].centre.x, Zones["Territories"][zone].centre.y, Zones["Territories"][zone].centre.z, Zones["Territories"][zone].radius)
     local blip = Territories[zone].blip
-    SetBlipColour(blip, colour)
+    SetBlipColour(blip,colour)
     BeginTextCommandSetBlipName("STRING")
-    AddTextComponentSubstringPlayerName(Zones["Gangs"][winner].name)
+    AddTextComponentSubstringPlayerName(winner)
     EndTextCommandSetBlipName(blip)
 
-    -- Update the blip for radius as well
-    local blipRadius = Territories[zone].blipRadius
-    if blipRadius then
-        SetBlipColour(blipRadius, colour)
-    end
-end)
 
+ 
+end)
 
 function isContested(tab)
     local count = 0
-    local gangName = nil
     for k, v in pairs(tab) do
-        if gangName == nil then
-            gangName = v.label
-        elseif gangName ~= v.label then
-            return "contested"
-        end
+        count = count + 1
+    end
+
+    if count > 1 then
+        return "contested"
     end
     return ""
 end

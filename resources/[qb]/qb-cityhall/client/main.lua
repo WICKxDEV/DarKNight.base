@@ -73,7 +73,7 @@ local function createBlip(options)
     SetBlipColour(blip, options.colour or 1)
     SetBlipAsShortRange(blip, options.shortRange or false)
     BeginTextCommandSetBlipName("STRING")
-    AddTextComponentSubstringPlayerName(options.title or 'No Title Given')
+    AddTextComponentString(options.title or 'No Title Given')
     EndTextCommandSetBlipName(blip)
     return blip
 end
@@ -276,10 +276,10 @@ end)
 
 RegisterNUICallback('requestLicenses', function(_, cb)
     local licensesMeta = PlayerData.metadata["licences"]
-    local availableLicenses = {}
-    for license, data in pairs(Config.Cityhalls[closestCityhall].licenses) do
-        if not data.metadata or licensesMeta[data.metadata] then
-            availableLicenses[license] = data
+    local availableLicenses = Config.Cityhalls[closestCityhall].licenses
+    for license, data in pairs(availableLicenses) do
+        if data.metadata and not licensesMeta[data.metadata] then
+            availableLicenses[license] = nil
         end
     end
     cb(availableLicenses)

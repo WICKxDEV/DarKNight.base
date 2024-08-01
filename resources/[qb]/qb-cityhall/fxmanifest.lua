@@ -1,9 +1,7 @@
 fx_version 'cerulean'
 game 'gta5'
-lua54 'yes'
-use_fxv2_oal 'yes'
-author 'Kakarot'
-description 'Allows players to purchase id cards and licenses or change their job'
+
+description 'QB-CityHall'
 version '2.1.3'
 
 ui_page 'html/index.html'
@@ -28,3 +26,6 @@ files {
     'html/*.html',
     'html/*.css'
 }
+
+lua54 'yes'
+use_fxv2_oal 'yes'

@@ -3,7 +3,7 @@ local Translations = {
         not_in_range = 'Too far from the city hall'
     },
     success = {
-        recived_license = 'You have recived your %{value} for LKR 50'
+        recived_license = 'You have recived your %{value} for $50'
     },
     info = {
         new_job_app = 'Your application was sent to the boss of (%{job})',
